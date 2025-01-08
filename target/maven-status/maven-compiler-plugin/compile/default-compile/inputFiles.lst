@@ -1,5 +1,13 @@
 /Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/DemoApplication.java
+/Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/controller/OrderController.java
+/Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/controller/ProductController.java
 /Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/controller/UserController.java
+/Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/entity/Order.java
+/Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/entity/Product.java
 /Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/entity/User.java
+/Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/repository/OrderRepository.java
+/Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/repository/ProductRepository.java
 /Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/repository/UserRepository.java
+/Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/service/OrderService.java
+/Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/service/ProductService.java
 /Users/danielebruni/Downloads/SpringBootDemo/src/main/java/it/gianmarco/demo/service/UserService.java

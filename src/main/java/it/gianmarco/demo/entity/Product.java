@@ -3,7 +3,6 @@ package it.gianmarco.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 
 @Entity
 @Data
@@ -11,15 +10,14 @@ import java.time.LocalDate;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long product_id;
 
-    private String name, surname;
+    private String product_name;
+    private String product_description;
 
-    private String email,password;
+    private double price;
 
-    private LocalDate dateOfBirth;
 }
