@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password   # Password dell'utente root
+      MYSQL_DATABASE: example_db          # Nome del database iniziale
+      MYSQL_USER: user                    # Nome dell'utente
+      MYSQL_PASSWORD: user_password       # Password dell'utente
+    ports:
+      - "3306:3306"                       # Espone la porta 3306 per MySQL
+    volumes:
+      - mysql_data:/var/lib/mysql         # Persistenza dei dati
+
+volumes:
+  mysql_data:

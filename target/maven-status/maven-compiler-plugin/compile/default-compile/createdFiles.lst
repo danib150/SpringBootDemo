@@ -1,0 +1,6 @@
+it/gianmarco/demo/entity/User$UserBuilder.class
+it/gianmarco/demo/controller/UserController.class
+it/gianmarco/demo/service/UserService.class
+it/gianmarco/demo/DemoApplication.class
+it/gianmarco/demo/repository/UserRepository.class
+it/gianmarco/demo/entity/User.class
