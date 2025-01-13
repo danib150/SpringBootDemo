@@ -13,10 +13,11 @@ import java.util.List;
 
 @Service
 public class OrderService {
+
     @Autowired
     private OrderRepository orderRepository;
 
-    Logger logger = LoggerFactory.getLogger(ProductService.class);
+    Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     public List<Order> findAll() {
         List<Order> orders = orderRepository.findAll();
@@ -27,6 +28,7 @@ public class OrderService {
         }
         return orders;
     }
+
     public Order save(Order order) {
         return orderRepository.save(order);
     }

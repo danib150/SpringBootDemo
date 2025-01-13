@@ -1,7 +1,6 @@
 package it.gianmarco.demo.entity;
 
-import ch.qos.logback.core.status.Status;
-import it.gianmarco.demo.enums.OrderStatusEnum;
+import it.gianmarco.demo.entity.enums.OrderStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +20,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
-    private LocalDate creation_date, update_date;
+    private LocalDate creationDate, updateDate;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
@@ -29,13 +28,13 @@ public class Order {
 
     @ManyToMany
     @JoinTable(
-            name = "orderProducts", // Nome esplicito per la tabella di associazione
+            name = "orderProducts",
             joinColumns = @JoinColumn(name = "orderId"),
             inverseJoinColumns = @JoinColumn(name = "productId")
     )
     private List<Product> products;
 
-    private Double total_price;;
+    private Double totalPrice;
 
     @Enumerated(EnumType.STRING)
     private OrderStatusEnum order_status =  OrderStatusEnum.IN_PROGRESS;

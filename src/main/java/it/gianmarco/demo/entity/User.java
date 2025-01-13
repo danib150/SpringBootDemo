@@ -1,6 +1,9 @@
 package it.gianmarco.demo.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -19,7 +22,7 @@ public class User {
 
     private String name, surname;
 
-    private String email,password;
+    private String email, password;
 
     private LocalDate dateOfBirth;
 }

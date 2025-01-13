@@ -1,6 +1,9 @@
 package it.gianmarco.demo.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 
@@ -15,8 +18,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
-    private String product_name;
-    private String product_description;
+    private String productName;
+    private String productDescription;
 
     private double price;
 
