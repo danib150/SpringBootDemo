@@ -1,5 +1,6 @@
 package it.gianmarco.demo.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gianmarco.demo.entity.Product;
 import it.gianmarco.demo.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
+@Tag(name = "Products Controller")
 public class ProductController {
 
     @Autowired
@@ -34,6 +36,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.save(product));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Product>> findAll() {
+        return ResponseEntity.ok(productService.findAll());
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> remove(@PathVariable Long id) {
@@ -41,7 +47,7 @@ public class ProductController {
             productService.remove(id);
             return ResponseEntity.ok("Product deleted successfully");
         } catch (Exception e) {
-            log.warn("Error deleting product: " + e.getMessage());
+            log.warn("Error deleting product: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
         }
     }

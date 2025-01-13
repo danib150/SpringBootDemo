@@ -1,5 +1,6 @@
 package it.gianmarco.demo.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gianmarco.demo.entity.Order;
 import it.gianmarco.demo.entity.User;
 import it.gianmarco.demo.service.OrderService;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/order")
 @RequiredArgsConstructor
+@Tag(name = "Order Controller")
 public class OrderController {
 
     @Autowired

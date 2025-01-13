@@ -13,6 +13,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "`order`")
 public class Order {
 
 
@@ -23,7 +24,7 @@ public class Order {
     private LocalDate creationDate, updateDate;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_Id", nullable = false)
     private User user;
 
     @ManyToMany
@@ -38,11 +39,4 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatusEnum orderStatus = OrderStatusEnum.IN_PROGRESS;
-
-
-
-
-
-
-
 }

@@ -1,5 +1,6 @@
 package it.gianmarco.demo.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gianmarco.demo.entity.User;
 import it.gianmarco.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@Tag(name = "User Controller")
 public class UserController {
 
     @Autowired
