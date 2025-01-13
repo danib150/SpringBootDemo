@@ -37,7 +37,7 @@ public class Order {
     private Double totalPrice;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatusEnum order_status =  OrderStatusEnum.IN_PROGRESS;
+    private OrderStatusEnum orderStatus = OrderStatusEnum.IN_PROGRESS;
 
 
 
