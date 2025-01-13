@@ -28,7 +28,7 @@ public class ProductController {
 
     @PatchMapping
     public ResponseEntity<Product> update(@RequestBody Product product) {
-        if (Objects.isNull(product.getProduct_id())) {
+        if (Objects.isNull(product.getProductId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         return ResponseEntity.ok(productService.save(product));
