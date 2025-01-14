@@ -1,8 +1,10 @@
 package it.gianmarco.demo.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,14 +17,9 @@ public class Warehouse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinTable(
-            name = "warehouseProducts", // Nome esplicito per la tabella di associazione
-            joinColumns = @JoinColumn(name = "wharehouseId"),
-            inverseJoinColumns = @JoinColumn(name = "productId")
-    )
-    private Product product;
+    private String name;
 
-    @Min(value = 0)
-    private int quantity;
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WarehouseProduct> products;
+
 }

@@ -2,12 +2,14 @@ package it.gianmarco.demo.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gianmarco.demo.controller.OrderDTO;
+import it.gianmarco.demo.entity.dto.OrderDto;
 import it.gianmarco.demo.entity.Order;
 import it.gianmarco.demo.entity.Product;
 import it.gianmarco.demo.entity.User;
 import it.gianmarco.demo.mapper.OrderMapper;
 import it.gianmarco.demo.repository.OrderRepository;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +17,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
+@AllArgsConstructor
 public class OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    @Autowired private OrderRepository orderRepository;
+    @Autowired private final OrderMapper orderMapper;
+    @Autowired private final UserService userService;
+    @Autowired private final ProductService productService;
 
-    private final OrderMapper orderMapper;
-    private final UserService userService;
-    private final ProductService productService;
-
-    public OrderService(OrderMapper orderMapper, UserService userService, ProductService productService) {
-        this.orderMapper = orderMapper;
-        this.userService = userService;
-        this.productService = productService;
-    }
-
-    Logger logger = LoggerFactory.getLogger(OrderService.class);
+    private final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     public List<Order> findAll() {
         List<Order> orders = orderRepository.findAll();
@@ -47,7 +43,9 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public Order createOrder(OrderDTO orderDTO) {
+
+    @Transactional
+    public Order createOrder(OrderDto orderDTO) {
         Order order = orderMapper.toEntity(orderDTO);
 
         User user = userService.findById(orderDTO.getUserId());
@@ -67,7 +65,7 @@ public class OrderService {
         throw new RuntimeException("User not found for ID: " + orderDTO.getUserId());
     }
 
-    public OrderDTO getOrderById(Long id) {
+    public OrderDto getOrderById(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         return orderMapper.toDto(order);

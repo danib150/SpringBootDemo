@@ -1,4 +1,4 @@
-package it.gianmarco.demo.controller;
+package it.gianmarco.demo.entity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,11 +12,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDTO {
-    private Long orderId;
+public class OrderDto {
     private LocalDate creationDate;
     private LocalDate updateDate;
-    private Long userId; // Solo l'ID dell'utente
-    private List<Long> productIds; // Solo gli ID dei prodotti
+    private Long userId;
+    private List<Long> productIds;
     private Double totalPrice;
 }
