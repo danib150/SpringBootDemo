@@ -1,6 +1,5 @@
-package it.gianmarco.demo.entity.dto;
+package it.gianmarco.demo.controller;
 
-import it.gianmarco.demo.entity.enums.OrderStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +19,4 @@ public class OrderDTO {
     private Long userId; // Solo l'ID dell'utente
     private List<Long> productIds; // Solo gli ID dei prodotti
     private Double totalPrice;
-
 }
