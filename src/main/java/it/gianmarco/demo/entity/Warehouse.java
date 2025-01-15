@@ -1,5 +1,6 @@
 package it.gianmarco.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,7 @@ public class Warehouse {
 
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WarehouseProduct> products;
 

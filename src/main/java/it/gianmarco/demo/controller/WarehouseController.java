@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gianmarco.demo.entity.Warehouse;
 import it.gianmarco.demo.entity.WarehouseProduct;
 import it.gianmarco.demo.entity.dto.WarehouseDto;
+import it.gianmarco.demo.service.ProductService;
 import it.gianmarco.demo.service.WarehouseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,22 @@ import java.util.List;
 public class WarehouseController {
 
     private final WarehouseService warehouseService;
+    private final ProductService productService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Warehouse>> findAll() {
         return ResponseEntity.ok(warehouseService.findAll());
+    }
+    
+    @DeleteMapping("/{warehouseId}")
+    public ResponseEntity<String> remove(@PathVariable Long warehouseId) {
+        try {
+            warehouseService.remove(warehouseId);
+            return ResponseEntity.ok("Product deleted successfully");
+        } catch (Exception e) {
+            log.warn("Error deleting product: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
     }
 
     @PatchMapping("/{warehouseId}")

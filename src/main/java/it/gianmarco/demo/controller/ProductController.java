@@ -2,7 +2,13 @@ package it.gianmarco.demo.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gianmarco.demo.entity.Product;
+import it.gianmarco.demo.entity.dto.ProductDto;
+import it.gianmarco.demo.mapper.ProductMapper;
+import it.gianmarco.demo.repository.ProductRepository;
 import it.gianmarco.demo.service.ProductService;
+import it.gianmarco.demo.service.WarehouseService;
+import jakarta.persistence.Entity;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +27,30 @@ import java.util.Objects;
 public class ProductController {
 
     @Autowired
+    private final ProductService service;
+    @Autowired
     private final ProductService productService;
+    @Autowired
+    private ProductMapper productMapper;
+    @Autowired
+    private ProductRepository productRepository;
 
     @PostMapping
-    public ResponseEntity<Product> save(@RequestBody Product product) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
+    public ResponseEntity<Product> save(@RequestBody ProductDto productDto) {
+        return ResponseEntity.ok(productRepository.save(productMapper.toEntity(productDto)));
     }
 
-    @PatchMapping
-    public ResponseEntity<Product> update(@RequestBody Product product) {
-        if (Objects.isNull(product.getProductId())) {
+    @PatchMapping("{productId}")
+    public ResponseEntity<ProductDto> update(@PathVariable Long productId, @RequestBody ProductDto productDto) {
+        ProductDto updatedProductDto = productService.updateProduct(productId, productDto);
+
+        if (updatedProductDto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return ResponseEntity.ok(productService.save(product));
+
+        return ResponseEntity.ok(updatedProductDto);
     }
+
 
     @GetMapping("/all")
     public ResponseEntity<List<Product>> findAll() {

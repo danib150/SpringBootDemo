@@ -28,4 +28,14 @@ public class WarehouseProduct {
     @Min(value = 0)
     @Column(nullable = false, columnDefinition = "int default 0")
     private int quantity = 0;
+
+    @Override
+    public String toString() {
+        return "WarehouseProduct{" +
+                "id=" + id +
+                ", warehouseId=" + (warehouse != null ? warehouse.getId() : "null") +  // Usa solo l'ID del magazzino
+                ", productId=" + (product != null ? product.getProductId() : "null") +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

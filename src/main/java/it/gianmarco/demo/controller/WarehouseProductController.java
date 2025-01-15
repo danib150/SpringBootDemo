@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gianmarco.demo.entity.Product;
 import it.gianmarco.demo.entity.Warehouse;
 import it.gianmarco.demo.entity.WarehouseProduct;
+import it.gianmarco.demo.entity.dto.ProductDto;
 import it.gianmarco.demo.entity.dto.WarehouseProductDto;
 import it.gianmarco.demo.service.WarehouseProductService;
 import it.gianmarco.demo.service.WarehouseService;
@@ -26,7 +27,7 @@ public class WarehouseProductController {
     private final WarehouseProductService warehouseProductService;
 
     @GetMapping("/{warehouseId}/products")
-    public ResponseEntity<List<WarehouseProduct>> getAllProducts(@PathVariable("warehouseId") Long warehouseId) {
+    public ResponseEntity<List<Product>> getAllProducts(@PathVariable("warehouseId") Long warehouseId) {
         return ResponseEntity.ok(warehouseProductService.findProductsByWarehouseId(warehouseId));
 
     }

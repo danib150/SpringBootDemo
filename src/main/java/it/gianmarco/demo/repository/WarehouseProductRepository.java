@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface WarehouseProductRepository extends JpaRepository<WarehouseProduct, Long> {
     Optional<WarehouseProduct> findByWarehouseAndProduct(Warehouse warehouse, Product product);
-    @Query("SELECT wp FROM WarehouseProduct wp WHERE wp.warehouse.id = :warehouseId")
-    List<WarehouseProduct> findByWarehouseId(@Param("warehouseId") Long warehouseId);
+    @Query("SELECT p FROM WarehouseProduct wp JOIN Product p ON p.productId = wp.product.productId WHERE wp.warehouse.id = :warehouseId")
+    List<Product> findByWarehouseId(@Param("warehouseId") Long warehouseId);
 
 }

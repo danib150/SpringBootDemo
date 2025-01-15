@@ -10,10 +10,12 @@ import it.gianmarco.demo.repository.ProductRepository;
 import it.gianmarco.demo.repository.WarehouseProductRepository;
 import it.gianmarco.demo.repository.WarehouseRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class WarehouseProductService {
@@ -30,8 +32,10 @@ public class WarehouseProductService {
                 .toList();
     }
 
-    public List<WarehouseProduct> findProductsByWarehouseId(Long warehouseId) {
-        return warehouseProductRepository.findByWarehouseId(warehouseId);
+    public List<Product> findProductsByWarehouseId(Long warehouseId) {
+        List<Product> products = warehouseProductRepository.findByWarehouseId(warehouseId);
+        log.info("Found {} products", products);
+        return products;
     }
 
 

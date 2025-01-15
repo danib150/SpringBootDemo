@@ -10,30 +10,24 @@ import java.util.List;
 @Entity
 @Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "`order`")
 public class Order {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
-    private LocalDate creationDate, updateDate;
+    private LocalDate creationDate;
+    private LocalDate updateDate;
 
     @ManyToOne
-    @JoinColumn(name = "user_Id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToMany
-    @JoinTable(
-            name = "orderProducts",
-            joinColumns = @JoinColumn(name = "orderId"),
-            inverseJoinColumns = @JoinColumn(name = "productId")
-    )
-    private List<Product> products;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderProduct> orderProducts;
 
     private Double totalPrice;
 

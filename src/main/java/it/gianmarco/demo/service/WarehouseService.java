@@ -6,12 +6,14 @@ import it.gianmarco.demo.entity.Product;
 import it.gianmarco.demo.entity.User;
 import it.gianmarco.demo.entity.Warehouse;
 import it.gianmarco.demo.entity.WarehouseProduct;
+import it.gianmarco.demo.entity.dto.ProductDto;
 import it.gianmarco.demo.entity.dto.WarehouseDto;
 import it.gianmarco.demo.mapper.WarehouseMapper;
 import it.gianmarco.demo.repository.ProductRepository;
 import it.gianmarco.demo.repository.WarehouseProductRepository;
 import it.gianmarco.demo.repository.WarehouseRepository;
 import jakarta.persistence.Entity;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,15 @@ import java.util.Optional;
 public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
+    private final ProductRepository productRepository;
     private WarehouseMapper warehouseMapper;
+
+    public void remove(Long id) {
+        if (!warehouseRepository.existsById(id)) {
+            log.warn("Product with this id, not found!");
+        }
+        warehouseRepository.deleteById(id);
+    }
 
     public List<Warehouse> findAll() {
         List<Warehouse> warehouses = warehouseRepository.findAll();
@@ -56,7 +66,6 @@ public class WarehouseService {
     public List<WarehouseProduct> getAllProducts() {
         Warehouse warehouse = warehouseRepository.findAll().stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("Warehouse not found"));
-
         return warehouse.getProducts();
     }
 }
