@@ -3,7 +3,6 @@ package it.gianmarco.demo.service;
 import it.gianmarco.demo.entity.Product;
 import it.gianmarco.demo.entity.Warehouse;
 import it.gianmarco.demo.entity.WarehouseProduct;
-import it.gianmarco.demo.entity.dto.WarehouseDto;
 import it.gianmarco.demo.entity.dto.WarehouseProductDto;
 import it.gianmarco.demo.mapper.WarehouseProductMapper;
 import it.gianmarco.demo.repository.ProductRepository;
