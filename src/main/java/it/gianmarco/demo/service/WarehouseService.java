@@ -1,50 +1,56 @@
 package it.gianmarco.demo.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gianmarco.demo.entity.Product;
+import it.gianmarco.demo.entity.User;
 import it.gianmarco.demo.entity.Warehouse;
 import it.gianmarco.demo.entity.WarehouseProduct;
+import it.gianmarco.demo.entity.dto.WarehouseDto;
+import it.gianmarco.demo.mapper.WarehouseMapper;
 import it.gianmarco.demo.repository.ProductRepository;
 import it.gianmarco.demo.repository.WarehouseProductRepository;
 import it.gianmarco.demo.repository.WarehouseRepository;
-import jakarta.annotation.PostConstruct;
+import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
-    private final ProductRepository productRepository;
-    private final WarehouseProductRepository warehouseProductRepository;
+    private WarehouseMapper warehouseMapper;
 
-    public Warehouse save(Warehouse warehouse) {
+    public List<Warehouse> findAll() {
+        List<Warehouse> warehouses = warehouseRepository.findAll();
+        try {
+            log.info("userService | findAll: {}", new ObjectMapper().writeValueAsString(warehouses));
+        } catch (JsonProcessingException e) {
+            log.warn("Impossibile convertire l'oggetto in stringa!");
+        }
+        return warehouses;
+    }
+
+    public Warehouse saveWarehouseName(WarehouseDto warehouseDto) {
+        Warehouse warehouse = warehouseMapper.toEntity(warehouseDto);
         return warehouseRepository.save(warehouse);
     }
 
-    public String updateProducts(Long productId, Integer quantity) {
-        Warehouse warehouse = warehouseRepository.findAll().stream().findFirst()
-                .orElseThrow(() -> new RuntimeException("Warehouse not found"));
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
-        WarehouseProduct warehouseProduct = warehouseProductRepository
-                .findByWarehouseAndProduct(warehouse, product)
-                .orElse(WarehouseProduct.builder()
-                        .warehouse(warehouse)
-                        .product(product)
-                        .quantity(0)
-                        .build());
-
-        warehouseProduct.setQuantity(warehouseProduct.getQuantity() + quantity);
-
-        warehouseProductRepository.save(warehouseProduct);
-
-        return "Product added/updated successfully";
-
+    public Warehouse updateWarehouseName(Long id, WarehouseDto warehouseDto) {
+        Optional<Warehouse> optionalWarehouse = warehouseRepository.findById(id);
+        if (optionalWarehouse.isPresent()) {
+            Warehouse warehouse = optionalWarehouse.get();
+            warehouse.setName(warehouseDto.getName());
+            return warehouseRepository.save(warehouse);
+        } else {
+            throw new RuntimeException("Warehouse not found");
+        }
     }
 
     public List<WarehouseProduct> getAllProducts() {

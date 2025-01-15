@@ -39,11 +39,6 @@ public class OrderService {
         return orders;
     }
 
-    public Order save(Order order) {
-        return orderRepository.save(order);
-    }
-
-
     @Transactional
     public Order createOrder(OrderDto orderDTO) {
         Order order = orderMapper.toEntity(orderDTO);
