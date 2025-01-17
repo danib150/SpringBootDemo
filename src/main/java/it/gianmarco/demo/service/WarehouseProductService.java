@@ -25,6 +25,7 @@ public class WarehouseProductService {
     private final WarehouseProductMapper warehouseProductMapper;
     private final WarehouseRepository warehouseRepository;
     private final ProductRepository productRepository;
+    private final ProductService productService;
 
     public List<WarehouseProductDto> findAll() {
         List<WarehouseProduct> entities = warehouseProductRepository.findAll();
@@ -39,7 +40,7 @@ public class WarehouseProductService {
         return products;
     }
 
-    privateafd WarehouseProduct getWarehouseProduct(Warehouse warehouse, Long productId) {
+    private WarehouseProduct getWarehouseProduct(Warehouse warehouse, Long productId) {
         Optional<WarehouseProduct> warehouseProductOptional = warehouse.getProducts().stream()
                 .filter(wp -> wp.getProduct().getProductId().equals(productId))
                 .findFirst();
@@ -57,7 +58,7 @@ public class WarehouseProductService {
                 .orElseThrow(() -> new RuntimeException("Warehouse not found"));
 
         WarehouseProduct warehouseProduct = getWarehouseProduct(warehouse, productId);
-        // Controlla se la quantità da rimuovere è disponibile
+
         if (warehouseProduct.getQuantity() < quantityToRemove) {
             throw new RuntimeException("Insufficient quantity in warehouse for product ID: " + productId);
         }
@@ -69,8 +70,9 @@ public class WarehouseProductService {
             warehouseProductRepository.delete(warehouseProduct);
         }
 
-        // Salva le modifiche
         warehouseRepository.save(warehouse);
+
+        productService.updateProductStockFromWarehouse(productId);
     }
 
     public void removeProductFromWarehouse(Long warehouseId, Long productId) {
@@ -80,7 +82,10 @@ public class WarehouseProductService {
         WarehouseProduct warehouseProduct = getWarehouseProduct(warehouse, productId);
         warehouse.getProducts().remove(warehouseProduct);
         warehouseRepository.save(warehouse);
+
+        productService.updateProductStockFromWarehouse(productId);
     }
+
 
     public WarehouseProduct save(Long warehouseID, WarehouseProductDto warehouseProductDto) {
 

@@ -97,8 +97,6 @@ public class OrderService {
             orderProducts.add(orderProduct);
         }
 
-
-
         orderProductRepository.saveAll(orderProducts);
         order.setOrderProducts(orderProducts);
 

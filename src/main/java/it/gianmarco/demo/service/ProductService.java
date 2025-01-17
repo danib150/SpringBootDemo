@@ -3,9 +3,11 @@ package it.gianmarco.demo.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gianmarco.demo.entity.Product;
+import it.gianmarco.demo.entity.WarehouseProduct;
 import it.gianmarco.demo.entity.dto.ProductDto;
 import it.gianmarco.demo.mapper.ProductMapper;
 import it.gianmarco.demo.repository.ProductRepository;
+import it.gianmarco.demo.repository.WarehouseProductRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,8 @@ public class ProductService {
 
     @Autowired
     private ProductMapper productMapper;
+    @Autowired
+    private WarehouseProductRepository warehouseProductRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
@@ -87,15 +91,33 @@ public class ProductService {
         return productMapper.toDto(updatedProduct);
     }
 
+    @Transactional
     public void remove(Long id) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()) {
             logger.warn("Product with ID {} not found!", id);
             throw new RuntimeException("Product not found");
         }
+
+        warehouseProductRepository.deleteByProduct_ProductId(id);
+
         productRepository.deleteById(id);
         logger.info("Product with ID {} has been removed", id);
     }
+
+    @Transactional
+    public void updateProductStockFromWarehouse(Long productId) {
+        List<WarehouseProduct> warehouseProducts = warehouseProductRepository.findByProduct_ProductId(productId);
+
+        int totalStock = warehouseProducts.stream().mapToInt(WarehouseProduct::getQuantity).sum();
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        product.setStockQuantity(totalStock);
+        productRepository.save(product);
+    }
+
 
     public List<Product> findAllByIds(List<Long> productIds) {
         List<Product> products = productRepository.findByProductIdIn(productIds);

@@ -35,7 +35,7 @@ public class WarehouseProductController {
     }
 
    @DeleteMapping("/{warehouseId}/remove/{productId}")
-   public ResponseEntity<?> removeProduct(@PathVariable("warehouseId") Long warehouseId,  @PathVariable("productId") Long productId, @RequestParam Integer quantity) {
+   public ResponseEntity<?> removeProduct(@PathVariable("warehouseId") Long warehouseId,  @PathVariable("productId") Long productId, @RequestParam(required = false) Integer quantity) {
             try {
                 if (Objects.isNull(quantity)) {
                     warehouseProductService.removeProductFromWarehouse(warehouseId, productId);
