@@ -1,5 +1,6 @@
 package it.gianmarco.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.gianmarco.demo.entity.enums.OrderStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,10 +23,12 @@ public class Order {
     private LocalDate creationDate;
     private LocalDate updateDate;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts;
 

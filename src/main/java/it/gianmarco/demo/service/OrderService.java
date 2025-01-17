@@ -20,7 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,41 +56,58 @@ public class OrderService {
             throw new RuntimeException("User not found for ID: " + orderDTO.getUserId());
         }
 
-        // Trova i prodotti
-        List<Product> products = productService.findAllByIds(orderDTO.getProductIds());
-        if (products.size() != orderDTO.getProductIds().size()) {
+        // Ottieni la mappa di ID prodotto -> quantità
+        Map<Long, Integer> productQuantities = orderDTO.getProductQuantities();
+
+        // Trova i prodotti nel database tramite gli ID
+        List<Product> products = productService.findAllByIds(new ArrayList<>(productQuantities.keySet()));
+        if (products.size() != productQuantities.size()) {
             throw new RuntimeException("Some products not found for the given IDs.");
         }
 
-        // Crea l'ordine
+        // Verifica la disponibilità dei prodotti nel magazzino
+        for (Product product : products) {
+            Integer requestedQuantity = productQuantities.get(product.getProductId());
+            if (requestedQuantity == null || product.getStockQuantity() < requestedQuantity) {
+                throw new RuntimeException("Product " + product.getProductName() + " is out of stock or insufficient quantity.");
+            }
+        }
+
         Order order = new Order();
         order.setUser(user);
         order.setCreationDate(orderDTO.getCreationDate());
         order.setUpdateDate(orderDTO.getUpdateDate());
-        order.setTotalPrice(calculateTotalPrice(products));
+        order.setTotalPrice(calculateTotalPrice(products, productQuantities));
         order.setOrderStatus(OrderStatusEnum.IN_PROGRESS);
 
-        // Salva l'ordine
         order = orderRepository.save(order);
 
-        // Crea le relazioni OrderProduct
-        Order finalOrder = order;
-        List<OrderProduct> orderProducts = products.stream()
-                .map(product -> {
-                    OrderProduct orderProduct = new OrderProduct();
-                    orderProduct.setOrder(finalOrder);
-                    orderProduct.setProduct(product);
-                    orderProduct.setQuantity(1); // Puoi personalizzare la quantità da `orderDTO`
-                    return orderProduct;
-                })
-                .collect(Collectors.toList());
+        List<OrderProduct> orderProducts = new ArrayList<>();
+        for (Product product : products) {
+            Integer quantity = productQuantities.get(product.getProductId());
 
-        // Salva le relazioni
+            OrderProduct orderProduct = new OrderProduct();
+            orderProduct.setOrder(order);
+            orderProduct.setProduct(product);
+            orderProduct.setQuantity(quantity);
+
+            int newStockQuantity = product.getStockQuantity() - quantity;
+            product.setStockQuantity(newStockQuantity);
+
+            orderProducts.add(orderProduct);
+        }
+
+
+
         orderProductRepository.saveAll(orderProducts);
         order.setOrderProducts(orderProducts);
 
+        productService.saveAll(products);
+
         return order;
     }
+
+
 
     public OrderDto getOrderById(Long id) {
         Order order = orderRepository.findById(id)
@@ -96,11 +115,18 @@ public class OrderService {
         return orderMapper.toDto(order);
     }
 
-    private Double calculateTotalPrice(List<Product> products) {
-        return products.stream()
-                .mapToDouble(Product::getPrice)
-                .sum();
+
+    private Double calculateTotalPrice(List<Product> products, Map<Long, Integer> productQuantities) {
+        double total = 0;
+        for (Product product : products) {
+            Integer quantity = productQuantities.get(product.getProductId());
+            if (quantity != null) {
+                total += product.getPrice() * quantity;
+            }
+        }
+        return total;
     }
+
 
     public List<OrderProductDto> getOrderProducts(Long orderId) {
         Order order = orderRepository.findById(orderId)

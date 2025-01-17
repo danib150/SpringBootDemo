@@ -36,6 +36,11 @@ public class ProductService {
         return products;
     }
 
+    public void saveAll(List<Product> products) {
+        productRepository.saveAll(products);
+    }
+
+
     @Transactional
     public ProductDto saveProduct(ProductDto productDto) {
         if (productDto.getProductName() == null || productDto.getProductName().isEmpty()) {

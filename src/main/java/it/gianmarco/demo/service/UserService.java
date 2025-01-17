@@ -3,6 +3,8 @@ package it.gianmarco.demo.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gianmarco.demo.entity.User;
+import it.gianmarco.demo.entity.dto.UserDto;
+import it.gianmarco.demo.mapper.UserMapper;
 import it.gianmarco.demo.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -18,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserMapper userMapper;
+
 
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -35,7 +40,14 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+
+
+    public User save(UserDto user) {
+        logger.info("Converting UserDto to User: {}", user);
+
+        User userToSave = userMapper.toEntity(user);
+        logger.info("userService | save: {}",user);
+
+        return userRepository.save(userToSave);
     }
 }

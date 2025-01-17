@@ -21,6 +21,8 @@ public class Product {
     private String productDescription;
     private double price;
 
+    private int stockQuantity;
+
     @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts;

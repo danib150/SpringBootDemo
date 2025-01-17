@@ -8,11 +8,13 @@ import it.gianmarco.demo.mapper.WarehouseProductMapper;
 import it.gianmarco.demo.repository.ProductRepository;
 import it.gianmarco.demo.repository.WarehouseProductRepository;
 import it.gianmarco.demo.repository.WarehouseRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -37,10 +39,47 @@ public class WarehouseProductService {
         return products;
     }
 
+    privateafd WarehouseProduct getWarehouseProduct(Warehouse warehouse, Long productId) {
+        Optional<WarehouseProduct> warehouseProductOptional = warehouse.getProducts().stream()
+                .filter(wp -> wp.getProduct().getProductId().equals(productId))
+                .findFirst();
 
-    public WarehouseProductDto findById(Long id) {
-        WarehouseProduct entity = warehouseProductRepository.findById(id).orElse(null);
-        return entity != null ? warehouseProductMapper.toDto(entity) : null;
+        if (warehouseProductOptional.isEmpty()) {
+            throw new RuntimeException("Product not found in the specified warehouse");
+        }
+
+        return warehouseProductOptional.get();
+    }
+
+
+    public void removeProductQuantityFromWarehouse(Long warehouseId, Long productId, int quantityToRemove) {
+        Warehouse warehouse = warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new RuntimeException("Warehouse not found"));
+
+        WarehouseProduct warehouseProduct = getWarehouseProduct(warehouse, productId);
+        // Controlla se la quantità da rimuovere è disponibile
+        if (warehouseProduct.getQuantity() < quantityToRemove) {
+            throw new RuntimeException("Insufficient quantity in warehouse for product ID: " + productId);
+        }
+
+        warehouseProduct.setQuantity(warehouseProduct.getQuantity() - quantityToRemove);
+
+        if (warehouseProduct.getQuantity() == 0) {
+            warehouse.getProducts().remove(warehouseProduct);
+            warehouseProductRepository.delete(warehouseProduct);
+        }
+
+        // Salva le modifiche
+        warehouseRepository.save(warehouse);
+    }
+
+    public void removeProductFromWarehouse(Long warehouseId, Long productId) {
+        Warehouse warehouse = warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new RuntimeException("Warehouse not found"));
+
+        WarehouseProduct warehouseProduct = getWarehouseProduct(warehouse, productId);
+        warehouse.getProducts().remove(warehouseProduct);
+        warehouseRepository.save(warehouse);
     }
 
     public WarehouseProduct save(Long warehouseID, WarehouseProductDto warehouseProductDto) {

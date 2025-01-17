@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/order")
@@ -22,8 +24,17 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<Order> save(@RequestBody OrderDto order) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(order));
+    public ResponseEntity<?> save(@RequestBody OrderDto order) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(order));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Order>> findAll() {
+        return ResponseEntity.ok(orderService.findAll());
     }
 
 }

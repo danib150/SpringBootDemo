@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -16,6 +17,6 @@ public class OrderDto {
     private LocalDate creationDate;
     private LocalDate updateDate;
     private Long userId;
-    private List<Long> productIds;
+    private Map<Long, Integer> productQuantities;  // Modifica: Mappa prodotto -> quantità
     private Double totalPrice;
 }

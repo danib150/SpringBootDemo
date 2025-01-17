@@ -6,9 +6,6 @@ import it.gianmarco.demo.entity.dto.ProductDto;
 import it.gianmarco.demo.mapper.ProductMapper;
 import it.gianmarco.demo.repository.ProductRepository;
 import it.gianmarco.demo.service.ProductService;
-import it.gianmarco.demo.service.WarehouseService;
-import jakarta.persistence.Entity;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @RestController

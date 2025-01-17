@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Slf4j
 public class MatrixUtils {
-    public static Set<Integer> oppositeDiagoal(int[][] matrix) {
+    public static Set<Integer> oppositeDiagonal(int[][] matrix) {
         Set<Integer> result = new HashSet<>();
         int l = matrix.length-1;
         int c = 0;

@@ -2,22 +2,21 @@ package it.gianmarco.demo.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gianmarco.demo.entity.Product;
-import it.gianmarco.demo.entity.User;
-import it.gianmarco.demo.entity.Warehouse;
-import it.gianmarco.demo.entity.WarehouseProduct;
+import it.gianmarco.demo.entity.*;
+import it.gianmarco.demo.entity.dto.OrderDto;
 import it.gianmarco.demo.entity.dto.ProductDto;
 import it.gianmarco.demo.entity.dto.WarehouseDto;
+import it.gianmarco.demo.entity.enums.OrderStatusEnum;
 import it.gianmarco.demo.mapper.WarehouseMapper;
-import it.gianmarco.demo.repository.ProductRepository;
-import it.gianmarco.demo.repository.WarehouseProductRepository;
-import it.gianmarco.demo.repository.WarehouseRepository;
+import it.gianmarco.demo.repository.*;
 import jakarta.persistence.Entity;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +26,10 @@ import java.util.Optional;
 public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
-    private final ProductRepository productRepository;
+    private final UserService userService;
+    private final ProductService productService;
+    private final OrderRepository orderRepository;
+    private final OrderProductRepository orderProductRepository;
     private WarehouseMapper warehouseMapper;
 
     public void remove(Long id) {
@@ -51,6 +53,11 @@ public class WarehouseService {
         Warehouse warehouse = warehouseMapper.toEntity(warehouseDto);
         return warehouseRepository.save(warehouse);
     }
+
+    public void calculateTotalPrice() {
+
+    }
+
 
     public Warehouse updateWarehouseName(Long id, WarehouseDto warehouseDto) {
         Optional<Warehouse> optionalWarehouse = warehouseRepository.findById(id);
